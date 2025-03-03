@@ -36,11 +36,35 @@ function Register() {
           alert('กรุณาป้อนที่อยู่อีเมล์') 
       }else if(userPassword.trim().length == 0){ 
           alert('กรุณาป้อนรหัสผ่าน') 
-      }else if(userImage == null) { 
-          alert('กรุณาเลือกรูป') 
       }else{ 
       //บันทึงลง DB แล้ว redirect ไปหน้า Login
       console.log(userFullname, userEmail, userName, userPassword);
+      //Send data to API, save to DB and redirect to Login page.
+      //Packing data
+      const formData = new FormData();
+      formData.append('userImage', userImage);
+      formData.append('userFullname', userFullname);
+      formData.append('userEmail', userEmail);
+      formData.append('userName', userName);
+      formData.append('userPassword', userPassword);
+      //Send data to API
+      try {
+        const response = await fetch("http://localhost:4000/user/", {
+          method: 'POST',
+          body: formData,
+        });
+        if(response.status == 201){
+          alert("สมัครสมาชิกสําเร็จ");
+          //navigator("/")
+          window.location.href = '/'
+        }else{
+          alert("สมัครสมาชิกไม่สำเร็จกรุณาลองใหม่อีกครั้ง");
+        }
+      }
+      catch (error) {
+        alert("เกิดข้อผิดพลาดในการสมัครสมาชิก", error);
+
+      }
       }
   }
 
